@@ -1,0 +1,40 @@
+service: mock_project_group4
+frameworkVersion: "2"
+
+provider:
+  iam:
+    role: <<ARN of IAM Role>>
+  name: aws
+  runtime: python3.9
+  lambdaHashingVersion: 20201221
+  layers:
+    - <<ARN for PySQL>>
+    - <<ARN for JWT Decode>>
+
+functions:
+  farmer_create_product:
+    handler: lambdas/farmer_create_product.lambda_handler
+
+  farmer_get_data:
+    handler: lambdas/farmer_get_data.lambda_handler
+
+  farmer_dashboard:
+    handler: lambdas/farmer_dashboard.lambda_handler
+
+  farmer_signup:
+    handler: lambdas/farmer_signup.lambda_handler
+
+  getUploadUrl:
+    handler: lambdas/getUploadUrl.lambda_handler
+
+  customer_create_order:
+    handler: lambdas/customer_create_order.lambda_handler
+
+  customer_get_order:
+    handler: lambdas/customer_get_order.lambda_handler
+
+  customer_send_emails:
+    handler: lambdas/customer_send_emails.lambda_handler
+
+  customer_signup:
+    handler: lambdas/customer_signup.lambda_handler
