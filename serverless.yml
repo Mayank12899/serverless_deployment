@@ -5,6 +5,12 @@ provider:
   iam:
     role: <<ARN of IAM Role>>
   name: aws
+  vpc:
+    securityGroupIds:
+      - <<Security_Group_ID>>
+    subnetIds:
+      - <<Private_Subnet_1>>
+      - <<Private_Subnet_2>>
   runtime: python3.9
   lambdaHashingVersion: 20201221
   layers:
