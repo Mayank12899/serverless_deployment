@@ -20,15 +20,16 @@ resource "aws_security_group" "mock-project-4-sg-mysql" {
   name        = "mock-project-4-sg-mysql"
   description = "Allow the inbound traffic"
   vpc_id      = aws_vpc.mock-project4-vpc.id
-
+  
   ingress {
       description      = "Allow port 3306 only"
       from_port        = 3306
       to_port          = 3306
       protocol         = "tcp"
-      cidr_blocks      = ["0.0.0.0/0"]
+#      cidr_blocks      = [aws_security_group.mock-project-4-sg-lambda.id]
       #ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
      # security_group_id = aws_security_group.mock-project-4-sg.id
+      security_groups = [aws_security_group.mock-project-4-sg-lambda.id]
     }
 
   egress  {
@@ -312,16 +313,18 @@ resource "aws_autoscaling_group" "group4-asg" {
     depends_on = [
       aws_launch_template.group4-template
 ]
-  }
-
-#attach lb to asg
+   target_group_arns         = ["${aws_lb_target_group.group-4-tg.arn}"]
+   name = "mock-group4-tf"
+}
 
   resource "aws_autoscaling_attachment" "asg_attachment" {
     autoscaling_group_name = aws_autoscaling_group.group4-asg.id
-    elb                    = aws_lb.group-4-lb.id
+    alb_target_group_arn = aws_lb_target_group.group-4-tg.arn
+    depends_on = [
+      aws_lb.group-4-lb,
+      aws_autoscaling_group.group4-asg
+    ]
   }
-
-
 # 9 create Private route table
 resource "aws_route_table" "private-route-table" {
   vpc_id = aws_vpc.mock-project4-vpc.id
